@@ -62,10 +62,7 @@ export function ConversionForm({
                         </div>
                     </Field>
                     <Field>
-                        <Label
-                            htmlFor="currency"
-                            className="block text-sm font-medium text-gray-700"
-                        >
+                        <Label className="block text-sm font-medium text-gray-700">
                             Currency
                         </Label>
                         <Select

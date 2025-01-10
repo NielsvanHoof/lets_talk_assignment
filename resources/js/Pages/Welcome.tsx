@@ -2,12 +2,11 @@ import { ConversionForm } from '@/Components/CurrencyConverter/ConversionForm';
 import { ConversionResults } from '@/Components/CurrencyConverter/ConversionResults';
 import { Header } from '@/Components/CurrencyConverter/Header';
 import { PipelineTable } from '@/Components/CurrencyConverter/PipelineTable';
-import { PageProps } from '@/types';
 import { ExchangeRate, Pipeline } from '@/types/models';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { useCallback, useState } from 'react';
 
-interface WelcomeProps extends PageProps {
+interface WelcomeProps {
     exchangeRates: ExchangeRate[];
     lastUpdated: string | null;
     pipelines: Pipeline[];
@@ -18,6 +17,8 @@ export default function Welcome({
     lastUpdated,
     pipelines,
 }: WelcomeProps) {
+    const auth = usePage().props.auth;
+
     const [amount, setAmount] = useState('');
     const [selectedCurrency, setSelectedCurrency] = useState('USD');
     const [convertedAmounts, setConvertedAmounts] = useState<
@@ -90,7 +91,7 @@ export default function Welcome({
                         isLoading={isLoading}
                     />
 
-                    <PipelineTable pipelines={pipelines} />
+                    {auth.user && <PipelineTable pipelines={pipelines} />}
                 </div>
             </div>
         </>

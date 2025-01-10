@@ -21,15 +21,17 @@ interface PipelineModalProps {
 
 interface PipelineData {
     name: string;
-    cron: string;
+    cron_expression: string;
     is_active: boolean;
+    is_scheduled: boolean;
 }
 
 export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
     const { data, setData, post, processing, errors } = useForm<PipelineData>({
         name: '',
-        cron: '0 0 * * *',
+        cron_expression: '0 0 * * *',
         is_active: true,
+        is_scheduled: true,
     });
 
     const handleCreatePipeline = (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,8 +42,9 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
                 onClose();
                 setData({
                     name: '',
-                    cron: '0 0 * * *',
+                    cron_expression: '0 0 * * *',
                     is_active: true,
+                    is_scheduled: true,
                 });
             },
         });
@@ -117,19 +120,19 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
                                                 </Label>
                                                 <Input
                                                     type="text"
-                                                    id="cron"
-                                                    name="cron"
-                                                    value={data.cron}
+                                                    id="cron_expression"
+                                                    name="cron_expression"
+                                                    value={data.cron_expression}
                                                     onChange={(e) =>
                                                         setData({
                                                             ...data,
-                                                            cron: e.target
-                                                                .value,
+                                                            cron_expression:
+                                                                e.target.value,
                                                         })
                                                     }
                                                     className={clsx(
                                                         'mt-1 block w-full rounded-md shadow-sm focus:ring-purple-500 sm:text-sm',
-                                                        errors.cron
+                                                        errors.cron_expression
                                                             ? 'border-red-500 focus:border-red-500'
                                                             : 'border-gray-300 focus:border-purple-500',
                                                     )}
@@ -145,9 +148,9 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
                                                     {errors.name}
                                                 </p>
                                             )}
-                                            {errors.cron && (
+                                            {errors.cron_expression && (
                                                 <p className="text-sm text-red-600">
-                                                    {errors.cron}
+                                                    {errors.cron_expression}
                                                 </p>
                                             )}
                                         </Fieldset>

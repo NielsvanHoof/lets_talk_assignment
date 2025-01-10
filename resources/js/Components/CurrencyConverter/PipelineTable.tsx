@@ -7,23 +7,21 @@ interface PipelineTableProps {
 }
 
 export function PipelineTable({ pipelines }: PipelineTableProps) {
-    const handleTogglePipeline = async (pipeline: Pipeline) => {
-        try {
-            router.post(
-                route(
-                    `exchange-rates.${pipeline.is_active ? 'disable' : 'enable'}`,
-                    {
-                        pipeline: pipeline.id,
-                    },
-                ),
-                {
-                    only: ['pipelines'],
-                    preserveScroll: true,
-                },
-            );
-        } catch (error) {
-            console.error('Failed to toggle pipeline:', error);
-        }
+    const disablePipeline = (pipeline: Pipeline) => {
+        router.delete(
+            route('exchange-rates.disable', { pipeline: pipeline.id }),
+            {
+                only: ['pipelines'],
+                preserveScroll: true,
+            },
+        );
+    };
+
+    const enablePipeline = (pipeline: Pipeline) => {
+        router.post(route('exchange-rates.enable', { pipeline: pipeline.id }), {
+            only: ['pipelines'],
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -90,7 +88,9 @@ export function PipelineTable({ pipelines }: PipelineTableProps) {
                                 <td className="whitespace-nowrap px-6 py-4">
                                     <Button
                                         onClick={() =>
-                                            handleTogglePipeline(pipeline)
+                                            pipeline.is_active
+                                                ? disablePipeline(pipeline)
+                                                : enablePipeline(pipeline)
                                         }
                                         className={`text-sm font-medium ${
                                             pipeline.is_active
