@@ -92,7 +92,7 @@ export function ConversionResults({
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05 }}
-                                        key={rate.code}
+                                        key={rate.id}
                                         className="transition-colors hover:bg-gray-50"
                                     >
                                         <td className="whitespace-nowrap px-6 py-4">

@@ -1,5 +1,12 @@
 import { ExchangeRate } from '@/types/models';
-import { Button } from '@headlessui/react';
+import {
+    Button,
+    Field,
+    Fieldset,
+    Input,
+    Label,
+    Select,
+} from '@headlessui/react';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
@@ -30,21 +37,18 @@ export function ConversionForm({
             className="mb-8"
         >
             <div className="overflow-hidden rounded-lg bg-gradient-to-br from-purple-50/80 to-blue-50/80 p-6 shadow-lg backdrop-blur-sm">
-                <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="sm:col-span-2">
-                        <label
-                            htmlFor="amount"
-                            className="block text-sm font-medium text-gray-700"
-                        >
+                <Fieldset className="grid gap-4 sm:grid-cols-3">
+                    <Field className="sm:col-span-2">
+                        <Label className="block text-sm font-medium text-gray-700">
                             Amount
-                        </label>
+                        </Label>
                         <div className="relative mt-1 rounded-md shadow-sm">
                             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <span className="text-gray-500 sm:text-sm">
                                     {selectedCurrency}
                                 </span>
                             </div>
-                            <input
+                            <Input
                                 type="number"
                                 name="amount"
                                 id="amount"
@@ -56,15 +60,15 @@ export function ConversionForm({
                                 step="0.01"
                             />
                         </div>
-                    </div>
-                    <div>
-                        <label
+                    </Field>
+                    <Field>
+                        <Label
                             htmlFor="currency"
                             className="block text-sm font-medium text-gray-700"
                         >
                             Currency
-                        </label>
-                        <select
+                        </Label>
+                        <Select
                             id="currency"
                             name="currency"
                             value={selectedCurrency}
@@ -72,13 +76,13 @@ export function ConversionForm({
                             className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
                         >
                             {exchangeRates.map((rate) => (
-                                <option key={rate.code} value={rate.code}>
+                                <option key={rate.id} value={rate.code}>
                                     {rate.code} - {rate.name}
                                 </option>
                             ))}
-                        </select>
-                    </div>
-                </div>
+                        </Select>
+                    </Field>
+                </Fieldset>
                 <div className="mt-4 flex justify-end">
                     <Button
                         onClick={onConvert}

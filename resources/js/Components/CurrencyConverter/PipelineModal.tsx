@@ -11,6 +11,7 @@ import {
     TransitionChild,
 } from '@headlessui/react';
 import { useForm } from '@inertiajs/react';
+import clsx from 'clsx';
 import { Fragment } from 'react';
 
 interface PipelineModalProps {
@@ -31,7 +32,8 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
         is_active: true,
     });
 
-    const handleCreatePipeline = () => {
+    const handleCreatePipeline = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         post(route('exchange-rates.schedule'), {
             preserveScroll: true,
             onSuccess: () => {
@@ -79,7 +81,10 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
                                     >
                                         Create Update Schedule
                                     </DialogTitle>
-                                    <div className="mt-3">
+                                    <form
+                                        id="create-pipeline"
+                                        onSubmit={handleCreatePipeline}
+                                    >
                                         <Fieldset className="space-y-4">
                                             <Field>
                                                 <Label className="block text-sm font-medium text-gray-700">
@@ -88,6 +93,7 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
                                                 <Input
                                                     type="text"
                                                     id="name"
+                                                    name="name"
                                                     value={data.name}
                                                     onChange={(e) =>
                                                         setData({
@@ -96,7 +102,12 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
                                                                 .value,
                                                         })
                                                     }
-                                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                                    className={clsx(
+                                                        'mt-1 block w-full rounded-md shadow-sm focus:ring-purple-500 sm:text-sm',
+                                                        errors.name
+                                                            ? 'border-red-500 focus:border-red-500'
+                                                            : 'border-gray-300 focus:border-purple-500',
+                                                    )}
                                                     placeholder="Daily Update"
                                                 />
                                             </Field>
@@ -107,6 +118,7 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
                                                 <Input
                                                     type="text"
                                                     id="cron"
+                                                    name="cron"
                                                     value={data.cron}
                                                     onChange={(e) =>
                                                         setData({
@@ -115,7 +127,12 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
                                                                 .value,
                                                         })
                                                     }
-                                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                                    className={clsx(
+                                                        'mt-1 block w-full rounded-md shadow-sm focus:ring-purple-500 sm:text-sm',
+                                                        errors.cron
+                                                            ? 'border-red-500 focus:border-red-500'
+                                                            : 'border-gray-300 focus:border-purple-500',
+                                                    )}
                                                     placeholder="0 0 * * *"
                                                 />
                                                 <p className="mt-1 text-xs text-gray-500">
@@ -134,13 +151,13 @@ export function PipelineModal({ isOpen, onClose }: PipelineModalProps) {
                                                 </p>
                                             )}
                                         </Fieldset>
-                                    </div>
+                                    </form>
                                 </div>
                                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                                     <Button
-                                        type="button"
+                                        form="create-pipeline"
+                                        type="submit"
                                         className="inline-flex w-full justify-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                                        onClick={handleCreatePipeline}
                                         disabled={processing}
                                     >
                                         {processing

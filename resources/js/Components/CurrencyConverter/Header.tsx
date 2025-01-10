@@ -16,7 +16,7 @@ export function Header({ lastUpdated }: HeaderProps) {
         setIsUpdating(true);
         try {
             router.post(route('exchange-rates.update'), {
-                only: ['exchangeRates', 'lastUpdated'],
+                only: ['exchangeRates'],
                 preserveScroll: true,
             });
         } catch (error) {
