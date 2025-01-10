@@ -33,6 +33,14 @@ export default function Authenticated({
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    href={route('ip-addresses.index')}
+                                    active={route().current(
+                                        'ip-addresses.index',
+                                    )}
+                                >
+                                    IP Addresses
+                                </NavLink>
                             </div>
                         </div>
 

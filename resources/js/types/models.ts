@@ -18,3 +18,11 @@ export interface Pipeline {
     created_at: string;
     updated_at: string;
 }
+
+export interface IpAddress {
+    id: number;
+    ip_address: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
+}
