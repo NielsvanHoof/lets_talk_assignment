@@ -36,6 +36,7 @@
         "vite": "^6.0"
     },
     "dependencies": {
+        "@heroicons/react": "^2.2.0",
         "motion": "^11.16.4"
     }
 }

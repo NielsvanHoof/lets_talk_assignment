@@ -1,11 +1,20 @@
 <?php
 
+use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', IndexController::class)->name('home');
+
+
+Route::prefix('exchange-rates')->middleware(['auth'])->group(function () {
+    Route::post('/update', [ExchangeRateController::class, 'update'])->name('exchange-rates.update');
+    Route::post('/schedule', [ExchangeRateController::class, 'schedule'])->name('exchange-rates.schedule');
+    Route::delete('/schedule/{pipeline}', [ExchangeRateController::class, 'disable'])->name('exchange-rates.disable');
+    Route::post('/schedule/{pipeline}', [ExchangeRateController::class, 'enable'])->name('exchange-rates.enable');
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -17,4 +26,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

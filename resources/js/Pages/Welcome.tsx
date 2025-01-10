@@ -1,5 +1,6 @@
-import { ExchangeRate } from '@/types/models';
+import { ExchangeRate, Pipeline } from '@/types/models';
 import { Dialog, Transition } from '@headlessui/react';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Head, router } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useCallback, useState } from 'react';
@@ -7,13 +8,13 @@ import { Fragment, useCallback, useState } from 'react';
 interface WelcomeProps {
     exchangeRates: ExchangeRate[];
     lastUpdated: string;
-    cronSchedule: string | null;
+    pipelines: Pipeline[];
 }
 
 export default function Welcome({
     exchangeRates,
     lastUpdated,
-    cronSchedule,
+    pipelines,
 }: WelcomeProps) {
     const [amount, setAmount] = useState<string>('1');
     const [selectedCurrency, setSelectedCurrency] = useState<string>('USD');
@@ -21,13 +22,16 @@ export default function Welcome({
         Record<string, string>
     >({});
     const [showResults, setShowResults] = useState(false);
+    const [showRatesTable, setShowRatesTable] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [isUpdatingRates, setIsUpdatingRates] = useState(false);
-    const [showCronModal, setShowCronModal] = useState(false);
-    const [cronExpression, setCronExpression] = useState(
-        cronSchedule || '0 0 * * *',
-    );
-    const [cronError, setCronError] = useState<string | null>(null);
+    const [showPipelineModal, setShowPipelineModal] = useState(false);
+    const [pipelineForm, setPipelineForm] = useState({
+        name: '',
+        cron: '0 0 * * *',
+        is_active: true,
+    });
+    const [pipelineError, setPipelineError] = useState<string | null>(null);
 
     const calculateConversions = useCallback(() => {
         const amountNum = parseFloat(amount);
@@ -77,7 +81,7 @@ export default function Welcome({
     const handleUpdateRates = async () => {
         try {
             setIsUpdatingRates(true);
-            router.post(
+            await router.post(
                 route('exchange-rates.update'),
                 {},
                 {
@@ -92,31 +96,44 @@ export default function Welcome({
         }
     };
 
-    const handleScheduleUpdate = async () => {
+    const handleCreatePipeline = async () => {
         try {
-            router.post(
-                route('exchange-rates.schedule'),
-                { cronExpression },
-                {
-                    only: ['cronSchedule'],
-                    preserveScroll: true,
-                    onSuccess: () => setShowCronModal(false),
-                    onError: () => setCronError('Invalid cron expression'),
+            await router.post(route('exchange-rates.schedule'), pipelineForm, {
+                only: ['pipelines'],
+                preserveScroll: true,
+                onSuccess: () => {
+                    setShowPipelineModal(false);
+                    setPipelineForm({
+                        name: '',
+                        cron: '0 0 * * *',
+                        is_active: true,
+                    });
                 },
-            );
+                onError: () =>
+                    setPipelineError('Invalid pipeline configuration'),
+            });
         } catch (error) {
-            setCronError('Invalid cron expression');
+            setPipelineError('Failed to create pipeline');
         }
     };
 
-    const handleDisableSchedule = async () => {
+    const handleTogglePipeline = async (pipeline: Pipeline) => {
         try {
-            router.delete(route('exchange-rates.disableSchedule'), {
-                only: ['cronSchedule'],
-                preserveScroll: true,
-            });
+            await router.post(
+                route(
+                    `exchange-rates.${pipeline.is_active ? 'disable' : 'enable'}`,
+                    {
+                        pipeline: pipeline.id,
+                    },
+                ),
+                {},
+                {
+                    only: ['pipelines'],
+                    preserveScroll: true,
+                },
+            );
         } catch (error) {
-            console.error('Failed to disable schedule:', error);
+            console.error('Failed to toggle pipeline:', error);
         }
     };
 
@@ -184,19 +201,11 @@ export default function Welcome({
                                     )}
                                 </button>
                                 <button
-                                    onClick={() => setShowCronModal(true)}
+                                    onClick={() => setShowPipelineModal(true)}
                                     className="inline-flex items-center rounded-md bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                                 >
                                     Schedule Updates
                                 </button>
-                                {cronSchedule && (
-                                    <button
-                                        onClick={handleDisableSchedule}
-                                        className="inline-flex items-center rounded-md bg-red-100 px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                                    >
-                                        Disable Schedule
-                                    </button>
-                                )}
                             </div>
                         </motion.div>
 
@@ -246,7 +255,7 @@ export default function Welcome({
                                     >
                                         {exchangeRates.map((rate) => (
                                             <option
-                                                key={rate.code}
+                                                key={rate.id}
                                                 value={rate.code}
                                             >
                                                 {rate.code} - {rate.name}
@@ -297,98 +306,240 @@ export default function Welcome({
                             </motion.div>
                         </motion.div>
 
-                        <AnimatePresence>
-                            {showResults && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 20 }}
-                                    transition={{
-                                        type: 'spring',
-                                        damping: 25,
-                                        stiffness: 200,
-                                    }}
-                                    className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow"
-                                >
-                                    <table className="min-w-full divide-y divide-gray-200">
-                                        <thead className="bg-gray-50">
-                                            <tr>
-                                                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                    Currency
-                                                </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                    Converted Amount
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-200">
-                                            {exchangeRates.map(
-                                                (rate, index) => (
-                                                    <motion.tr
-                                                        initial={{
-                                                            opacity: 0,
-                                                            y: 10,
-                                                        }}
-                                                        animate={{
-                                                            opacity: 1,
-                                                            y: 0,
-                                                        }}
-                                                        transition={{
-                                                            delay: index * 0.05,
-                                                        }}
-                                                        key={rate.code}
-                                                        className="transition-colors hover:bg-gray-50"
-                                                    >
-                                                        <td className="whitespace-nowrap px-6 py-4">
-                                                            <div className="flex items-center">
-                                                                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100 text-sm font-semibold text-gray-700">
-                                                                    {rate.code}
-                                                                </span>
-                                                                <div className="ml-4">
+                        {showResults && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="mb-8"
+                            >
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-lg font-medium text-gray-900">
+                                        Conversion Results
+                                    </h2>
+                                    <button
+                                        onClick={() =>
+                                            setShowRatesTable(!showRatesTable)
+                                        }
+                                        className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                                    >
+                                        {showRatesTable ? (
+                                            <>
+                                                Hide Rates
+                                                <ChevronUpIcon className="-mr-1 ml-2 h-4 w-4" />
+                                            </>
+                                        ) : (
+                                            <>
+                                                Show Rates
+                                                <ChevronDownIcon className="-mr-1 ml-2 h-4 w-4" />
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+
+                                <AnimatePresence>
+                                    {showRatesTable && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{
+                                                opacity: 1,
+                                                height: 'auto',
+                                            }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{
+                                                type: 'spring',
+                                                damping: 25,
+                                                stiffness: 200,
+                                            }}
+                                            className="mt-4 overflow-hidden rounded-lg border border-gray-200 bg-white shadow"
+                                        >
+                                            <table className="min-w-full divide-y divide-gray-200">
+                                                <thead className="bg-gray-50">
+                                                    <tr>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                                            Currency
+                                                        </th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                                            Converted Amount
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-gray-200">
+                                                    {exchangeRates.map(
+                                                        (rate, index) => (
+                                                            <motion.tr
+                                                                initial={{
+                                                                    opacity: 0,
+                                                                    y: 10,
+                                                                }}
+                                                                animate={{
+                                                                    opacity: 1,
+                                                                    y: 0,
+                                                                }}
+                                                                transition={{
+                                                                    delay:
+                                                                        index *
+                                                                        0.05,
+                                                                }}
+                                                                key={rate.code}
+                                                                className="transition-colors hover:bg-gray-50"
+                                                            >
+                                                                <td className="whitespace-nowrap px-6 py-4">
+                                                                    <div className="flex items-center">
+                                                                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100 text-sm font-semibold text-gray-700">
+                                                                            {
+                                                                                rate.code
+                                                                            }
+                                                                        </span>
+                                                                        <div className="ml-4">
+                                                                            <div className="text-sm font-medium text-gray-900">
+                                                                                {
+                                                                                    rate.name
+                                                                                }
+                                                                            </div>
+                                                                            <div className="text-sm text-gray-500">
+                                                                                {
+                                                                                    rate.code
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td className="whitespace-nowrap px-6 py-4">
                                                                     <div className="text-sm font-medium text-gray-900">
                                                                         {
-                                                                            rate.name
-                                                                        }
-                                                                    </div>
-                                                                    <div className="text-sm text-gray-500">
-                                                                        {
                                                                             rate.code
+                                                                        }{' '}
+                                                                        {
+                                                                            convertedAmounts[
+                                                                                rate
+                                                                                    .code
+                                                                            ]
                                                                         }
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="whitespace-nowrap px-6 py-4">
-                                                            <div className="text-sm font-medium text-gray-900">
-                                                                {rate.code}{' '}
-                                                                {
-                                                                    convertedAmounts[
-                                                                        rate
-                                                                            .code
-                                                                    ]
-                                                                }
-                                                            </div>
-                                                            <div className="text-xs text-gray-500">
-                                                                Rate:{' '}
-                                                                {rate.rate.toFixed(
-                                                                    4,
-                                                                )}
-                                                            </div>
-                                                        </td>
-                                                    </motion.tr>
-                                                ),
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                                                                    <div className="text-xs text-gray-500">
+                                                                        Rate:{' '}
+                                                                        {rate.rate.toFixed(
+                                                                            4,
+                                                                        )}
+                                                                    </div>
+                                                                </td>
+                                                            </motion.tr>
+                                                        ),
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </motion.div>
+                        )}
 
-                        <Transition.Root show={showCronModal} as={Fragment}>
+                        <div className="mt-8">
+                            <h2 className="text-lg font-medium text-gray-900">
+                                Scheduled Updates
+                            </h2>
+                            <div className="mt-4 overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                                Name
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                                Schedule
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                                Last Run
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                                Status
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200">
+                                        {pipelines.map((pipeline) => (
+                                            <tr
+                                                key={pipeline.id}
+                                                className="hover:bg-gray-50"
+                                            >
+                                                <td className="whitespace-nowrap px-6 py-4">
+                                                    <div className="text-sm font-medium text-gray-900">
+                                                        {pipeline.name}
+                                                    </div>
+                                                </td>
+                                                <td className="whitespace-nowrap px-6 py-4">
+                                                    <div className="text-sm text-gray-500">
+                                                        {pipeline.cron}
+                                                    </div>
+                                                </td>
+                                                <td className="whitespace-nowrap px-6 py-4">
+                                                    <div className="text-sm text-gray-500">
+                                                        {pipeline.last_run_at
+                                                            ? new Date(
+                                                                  pipeline.last_run_at,
+                                                              ).toLocaleString()
+                                                            : 'Never'}
+                                                    </div>
+                                                </td>
+                                                <td className="whitespace-nowrap px-6 py-4">
+                                                    <span
+                                                        className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
+                                                            pipeline.is_active
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : 'bg-red-100 text-red-800'
+                                                        }`}
+                                                    >
+                                                        {pipeline.is_active
+                                                            ? 'Active'
+                                                            : 'Inactive'}
+                                                    </span>
+                                                </td>
+                                                <td className="whitespace-nowrap px-6 py-4">
+                                                    <button
+                                                        onClick={() =>
+                                                            handleTogglePipeline(
+                                                                pipeline,
+                                                            )
+                                                        }
+                                                        className={`text-sm font-medium ${
+                                                            pipeline.is_active
+                                                                ? 'text-red-600 hover:text-red-900'
+                                                                : 'text-green-600 hover:text-green-900'
+                                                        }`}
+                                                    >
+                                                        {pipeline.is_active
+                                                            ? 'Disable'
+                                                            : 'Enable'}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {pipelines.length === 0 && (
+                                            <tr>
+                                                <td
+                                                    colSpan={5}
+                                                    className="px-6 py-4 text-center text-sm text-gray-500"
+                                                >
+                                                    No scheduled updates
+                                                    configured
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <Transition.Root show={showPipelineModal} as={Fragment}>
                             <Dialog
                                 as="div"
                                 className="relative z-10"
-                                onClose={setShowCronModal}
+                                onClose={setShowPipelineModal}
                             >
                                 <Transition.Child
                                     as={Fragment}
@@ -419,43 +570,81 @@ export default function Welcome({
                                                         as="h3"
                                                         className="text-center text-lg font-medium leading-6 text-gray-900"
                                                     >
-                                                        Schedule Rate Updates
+                                                        Create Update Schedule
                                                     </Dialog.Title>
                                                     <div className="mt-3">
-                                                        <p className="text-sm text-gray-500">
-                                                            Enter a cron
-                                                            expression to
-                                                            schedule automatic
-                                                            rate updates.
-                                                            Default is daily at
-                                                            midnight (0 0 * *
-                                                            *).
-                                                        </p>
-                                                        <div className="mt-4">
-                                                            <label
-                                                                htmlFor="cronExpression"
-                                                                className="sr-only"
-                                                            >
-                                                                Cron Expression
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                id="cronExpression"
-                                                                value={
-                                                                    cronExpression
-                                                                }
-                                                                onChange={(e) =>
-                                                                    setCronExpression(
-                                                                        e.target
-                                                                            .value,
-                                                                    )
-                                                                }
-                                                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
-                                                                placeholder="0 0 * * *"
-                                                            />
-                                                            {cronError && (
-                                                                <p className="mt-2 text-sm text-red-600">
-                                                                    {cronError}
+                                                        <div className="space-y-4">
+                                                            <div>
+                                                                <label
+                                                                    htmlFor="name"
+                                                                    className="block text-sm font-medium text-gray-700"
+                                                                >
+                                                                    Name
+                                                                </label>
+                                                                <input
+                                                                    type="text"
+                                                                    id="name"
+                                                                    value={
+                                                                        pipelineForm.name
+                                                                    }
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
+                                                                        setPipelineForm(
+                                                                            {
+                                                                                ...pipelineForm,
+                                                                                name: e
+                                                                                    .target
+                                                                                    .value,
+                                                                            },
+                                                                        )
+                                                                    }
+                                                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                                                    placeholder="Daily Update"
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label
+                                                                    htmlFor="cron"
+                                                                    className="block text-sm font-medium text-gray-700"
+                                                                >
+                                                                    Schedule
+                                                                    (Cron
+                                                                    Expression)
+                                                                </label>
+                                                                <input
+                                                                    type="text"
+                                                                    id="cron"
+                                                                    value={
+                                                                        pipelineForm.cron
+                                                                    }
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
+                                                                        setPipelineForm(
+                                                                            {
+                                                                                ...pipelineForm,
+                                                                                cron: e
+                                                                                    .target
+                                                                                    .value,
+                                                                            },
+                                                                        )
+                                                                    }
+                                                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                                                    placeholder="0 0 * * *"
+                                                                />
+                                                                <p className="mt-1 text-xs text-gray-500">
+                                                                    Default is
+                                                                    daily at
+                                                                    midnight (0
+                                                                    0 * * *)
+                                                                </p>
+                                                            </div>
+                                                            {pipelineError && (
+                                                                <p className="text-sm text-red-600">
+                                                                    {
+                                                                        pipelineError
+                                                                    }
                                                                 </p>
                                                             )}
                                                         </div>
@@ -466,16 +655,16 @@ export default function Welcome({
                                                         type="button"
                                                         className="inline-flex w-full justify-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
                                                         onClick={
-                                                            handleScheduleUpdate
+                                                            handleCreatePipeline
                                                         }
                                                     >
-                                                        Schedule
+                                                        Create Schedule
                                                     </button>
                                                     <button
                                                         type="button"
                                                         className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
                                                         onClick={() =>
-                                                            setShowCronModal(
+                                                            setShowPipelineModal(
                                                                 false,
                                                             )
                                                         }

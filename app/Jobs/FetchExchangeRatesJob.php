@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\ExchangeRate;
+use App\Models\Pipeline;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Http;
@@ -25,7 +26,7 @@ class FetchExchangeRatesJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $response = Http::get(config('exchange.api_feed'));
+        $response = Http::get(config(key: 'exchange.api_feed'));
 
         $data = $response->json();
 

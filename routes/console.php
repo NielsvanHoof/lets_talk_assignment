@@ -1,6 +1,6 @@
 <?php
 
-use App\Jobs\FetchExchangeRatesJob;
+use App\Console\Commands\UpdateExchangeRates;
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::job(new FetchExchangeRatesJob)->dailyAt('12:00');
+Schedule::command(UpdateExchangeRates::class)->dailyAt('12:00')->withoutOverlapping()->onOneServer();
