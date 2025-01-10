@@ -42,6 +42,8 @@ class FetchExchangeRatesJob implements ShouldQueue
                 'rate' => $rate['rate'],
                 'date' => $rate['date'],
                 'inverseRate' => $rate['inverseRate'],
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
         }
 
