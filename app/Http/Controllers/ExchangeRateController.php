@@ -24,7 +24,7 @@ class ExchangeRateController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string',
-            'cron' => 'required|string',
+            'cron_expression' => 'required|string',
             'is_active' => 'required|boolean',
         ]);
 
