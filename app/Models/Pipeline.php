@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Pipeline extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'cron_expression',
+        'is_active',
+        'is_scheduled',
+        'last_run_at',
+        'next_run_at',
+        'user_id',
+    ];
 
     protected function casts(): array
     {

@@ -11,7 +11,7 @@ export interface ExchangeRate {
 export interface Pipeline {
     id: number;
     name: string;
-    cron: string;
+    cron_expression: string;
     is_active: boolean;
     is_scheduled: boolean;
     last_run_at: string | null;

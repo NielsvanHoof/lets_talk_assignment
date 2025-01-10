@@ -98,22 +98,26 @@ export function ConversionResults({
                                         <td className="whitespace-nowrap px-6 py-4">
                                             <div className="flex items-center">
                                                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100 text-sm font-semibold text-gray-700">
-                                                    {rate.code}
+                                                    {rate.alphaCode}
                                                 </span>
                                                 <div className="ml-4">
                                                     <div className="text-sm font-medium text-gray-900">
                                                         {rate.name}
                                                     </div>
                                                     <div className="text-sm text-gray-500">
-                                                        {rate.code}
+                                                        {rate.alphaCode}
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="whitespace-nowrap px-6 py-4">
                                             <div className="text-sm font-medium text-gray-900">
-                                                {rate.code}{' '}
-                                                {convertedAmounts[rate.code]}
+                                                {rate.alphaCode}{' '}
+                                                {
+                                                    convertedAmounts[
+                                                        rate.alphaCode
+                                                    ]
+                                                }
                                             </div>
                                             <div className="text-xs text-gray-500">
                                                 Rate: {rate.rate.toFixed(4)}

@@ -3,22 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\ExchangeRate;
-use App\Models\Pipeline;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 use Inertia\Inertia;
 
-class IndexController extends Controller
+class DashBoardController extends Controller
 {
     public function __invoke()
     {
         $exchangeRates = ExchangeRate::query()->get();
 
 
-        $pipelines = Auth::user()->with('pipelines')->get();
+        $pipelines = Auth::check()
+            ? Auth::user()->loadExists('pipelines')->pipelines
+            : collect();
 
-
-        return Inertia::render('Welcome', [
+        return Inertia::render('Dashboard', [
             'exchangeRates' => $exchangeRates,
             'pipelines' => $pipelines,
             'lastUpdated' => $pipelines->last()->updated_at ?? null,

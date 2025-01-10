@@ -1,7 +1,19 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { ExchangeRate, Pipeline } from '@/types/models';
 import { Head } from '@inertiajs/react';
+import ConverterPage from './Converter';
 
-export default function Dashboard() {
+interface DashboardProps {
+    exchangeRates: ExchangeRate[];
+    lastUpdated: string | null;
+    pipelines: Pipeline[];
+}
+
+export default function Dashboard({
+    exchangeRates,
+    lastUpdated,
+    pipelines,
+}: DashboardProps) {
     return (
         <AuthenticatedLayout
             header={
@@ -14,11 +26,11 @@ export default function Dashboard() {
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            You're logged in!
-                        </div>
-                    </div>
+                    <ConverterPage
+                        exchangeRates={exchangeRates}
+                        lastUpdated={lastUpdated}
+                        pipelines={pipelines}
+                    />
                 </div>
             </div>
         </AuthenticatedLayout>

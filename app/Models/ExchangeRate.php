@@ -6,5 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExchangeRate extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'code',
+        'alphaCode',
+        'name',
+        'rate',
+        'date',
+        'inverseRate',
+    ];
 }

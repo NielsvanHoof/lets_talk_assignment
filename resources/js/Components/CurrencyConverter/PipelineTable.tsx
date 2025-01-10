@@ -60,7 +60,7 @@ export function PipelineTable({ pipelines }: PipelineTableProps) {
                                 </td>
                                 <td className="whitespace-nowrap px-6 py-4">
                                     <div className="text-sm text-gray-500">
-                                        {pipeline.cron}
+                                        {pipeline.cron_expression}
                                     </div>
                                 </td>
                                 <td className="whitespace-nowrap px-6 py-4">
