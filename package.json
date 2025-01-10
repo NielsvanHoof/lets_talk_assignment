@@ -37,6 +37,7 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.2.0",
+        "clsx": "^2.1.1",
         "motion": "^11.16.4"
     }
 }
