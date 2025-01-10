@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Pipeline::class);
     }
+
+    public function allowedIpAddresses(): HasMany
+    {
+        return $this->hasMany(AllowedIpAddresses::class);
+    }
 }
