@@ -4,6 +4,7 @@ use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IpAddressController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,10 +28,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/exchange-rates/{pipeline}/enable', [ExchangeRateController::class, 'enable'])->name('exchange-rates.enable');
     Route::delete('/exchange-rates/{pipeline}/disable', [ExchangeRateController::class, 'disable'])->name('exchange-rates.disable');
 
-    // IP Address Management
     Route::get('/ip-addresses', [IpAddressController::class, 'index'])->name('ip-addresses.index');
     Route::post('/ip-addresses', [IpAddressController::class, 'store'])->name('ip-addresses.store');
     Route::delete('/ip-addresses/{ipAddress}', [IpAddressController::class, 'destroy'])->name('ip-addresses.destroy');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::middleware('auth')->group(function () {
