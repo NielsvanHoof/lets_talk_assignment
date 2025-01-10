@@ -26,12 +26,13 @@ class ExchangeRateController extends Controller
             'name' => 'required|string',
             'cron_expression' => 'required|string',
             'is_active' => 'required|boolean',
+            'is_scheduled' => 'required|boolean',
         ]);
 
 
         Pipeline::create([
             ...$data,
-            'user_id' => Auth::check() ? Auth::id() : 1,
+            'user_id' => Auth::id(),
         ]);
 
         return Redirect::back()->with([

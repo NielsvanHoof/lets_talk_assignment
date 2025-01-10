@@ -15,16 +15,13 @@ class IndexController extends Controller
         $exchangeRates = ExchangeRate::query()->get();
 
 
-        $pipelines = Pipeline::query()->where([
-            'user_id' => Auth::check() ? Auth::id() : 1,
-        ])->get();
+        $pipelines = Auth::user()->with('pipelines')->get();
 
-        $lastUpdated = Pipeline::query()->latest()->first()->updated_at ?? null;
 
         return Inertia::render('Welcome', [
             'exchangeRates' => $exchangeRates,
             'pipelines' => $pipelines,
-            'lastUpdated' => $lastUpdated,
+            'lastUpdated' => $pipelines->last()->updated_at ?? null,
         ]);
     }
 }
