@@ -1,4 +1,4 @@
-import { ExchangeRate } from '@/types/models';
+import {ExchangeRate} from '@/types/models';
 import {
     Button,
     Field,
@@ -7,8 +7,9 @@ import {
     Label,
     Select,
 } from '@headlessui/react';
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
+import {ArrowPathIcon} from '@heroicons/react/24/outline';
+import {motion} from 'framer-motion';
+import {Deferred} from "@inertiajs/react";
 
 interface ConversionFormProps {
     amount: string;
@@ -21,22 +22,23 @@ interface ConversionFormProps {
 }
 
 export function ConversionForm({
-    amount,
-    selectedCurrency,
-    exchangeRates,
-    onAmountChange,
-    onCurrencyChange,
-    onConvert,
-    isLoading,
-}: ConversionFormProps) {
+                                   amount,
+                                   selectedCurrency,
+                                   exchangeRates,
+                                   onAmountChange,
+                                   onCurrencyChange,
+                                   onConvert,
+                                   isLoading,
+                               }: ConversionFormProps) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{delay: 0.3}}
             className="mb-8"
         >
-            <div className="overflow-hidden rounded-lg bg-gradient-to-br from-purple-50/80 to-blue-50/80 p-6 shadow-lg backdrop-blur-sm">
+            <div
+                className="overflow-hidden rounded-lg bg-gradient-to-br from-purple-50/80 to-blue-50/80 p-6 shadow-lg backdrop-blur-sm">
                 <Fieldset className="grid gap-4 sm:grid-cols-3">
                     <Field className="sm:col-span-2">
                         <Label className="block text-sm font-medium text-gray-700">
@@ -88,7 +90,7 @@ export function ConversionForm({
                     >
                         {isLoading ? (
                             <>
-                                <ArrowPathIcon className="-ml-1 mr-3 h-5 w-5 animate-spin text-white" />
+                                <ArrowPathIcon className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"/>
                                 Converting...
                             </>
                         ) : (

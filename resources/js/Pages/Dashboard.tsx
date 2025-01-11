@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { ExchangeRate, Pipeline } from '@/types/models';
-import { Head } from '@inertiajs/react';
+import {ExchangeRate, Pipeline} from '@/types/models';
+import {Deferred, Head} from '@inertiajs/react';
 import ConverterPage from './Converter';
 
 interface DashboardProps {
@@ -10,10 +10,10 @@ interface DashboardProps {
 }
 
 export default function Dashboard({
-    exchangeRates,
-    lastUpdated,
-    pipelines,
-}: DashboardProps) {
+                                      exchangeRates,
+                                      lastUpdated,
+                                      pipelines,
+                                  }: DashboardProps) {
     return (
         <AuthenticatedLayout
             header={
@@ -22,7 +22,7 @@ export default function Dashboard({
                 </h2>
             }
         >
-            <Head title="Dashboard" />
+            <Head title="Dashboard"/>
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">

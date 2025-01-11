@@ -1,9 +1,8 @@
 <?php
 
 use App\Http\Controllers\DashBoardController;
-use App\Http\Controllers\ExchangeRateController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IpAddressController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -12,21 +11,12 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 });
 
-
-
-Route::prefix('exchange-rates')->middleware(['auth'])->group(function () {
-    Route::post('/update', [ExchangeRateController::class, 'update'])->name('exchange-rates.update');
-    Route::post('/schedule', [ExchangeRateController::class, 'schedule'])->name('exchange-rates.schedule');
-    Route::delete('/schedule/{pipeline}', [ExchangeRateController::class, 'disable'])->name('exchange-rates.disable');
-    Route::post('/schedule/{pipeline}', [ExchangeRateController::class, 'enable'])->name('exchange-rates.enable');
-});
-
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', DashBoardController::class)->name('dashboard');
-    Route::post('/exchange-rates/update', [ExchangeRateController::class, 'update'])->name('exchange-rates.update');
-    Route::post('/exchange-rates/schedule', [ExchangeRateController::class, 'schedule'])->name('exchange-rates.schedule');
-    Route::post('/exchange-rates/{pipeline}/enable', [ExchangeRateController::class, 'enable'])->name('exchange-rates.enable');
-    Route::delete('/exchange-rates/{pipeline}/disable', [ExchangeRateController::class, 'disable'])->name('exchange-rates.disable');
+    Route::get('/dashboard', [DashBoardController::class, 'index'])->name('dashboard');
+    Route::post('/exchange-rates/update', [DashBoardController::class, 'update'])->name('exchange-rates.update');
+    Route::post('/exchange-rates/schedule', [DashBoardController::class, 'schedule'])->name('exchange-rates.schedule');
+    Route::post('/exchange-rates/{pipeline}/enable', [DashBoardController::class, 'enable'])->name('exchange-rates.enable');
+    Route::delete('/exchange-rates/{pipeline}/disable', [DashBoardController::class, 'disable'])->name('exchange-rates.disable');
 
     Route::get('/ip-addresses', [IpAddressController::class, 'index'])->name('ip-addresses.index');
     Route::post('/ip-addresses', [IpAddressController::class, 'store'])->name('ip-addresses.store');
@@ -43,4 +33,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

@@ -1,10 +1,10 @@
-import { ConversionForm } from '@/Components/CurrencyConverter/ConversionForm';
-import { ConversionResults } from '@/Components/CurrencyConverter/ConversionResults';
-import { Header } from '@/Components/CurrencyConverter/Header';
-import { PipelineTable } from '@/Components/CurrencyConverter/PipelineTable';
-import { ExchangeRate, Pipeline } from '@/types/models';
-import { Head, usePage } from '@inertiajs/react';
-import { useCallback, useState } from 'react';
+import {ConversionForm} from '@/Components/CurrencyConverter/ConversionForm';
+import {ConversionResults} from '@/Components/CurrencyConverter/ConversionResults';
+import {Header} from '@/Components/CurrencyConverter/Header';
+import {PipelineTable} from '@/Components/CurrencyConverter/PipelineTable';
+import {ExchangeRate, Pipeline} from '@/types/models';
+import {Head, usePage} from '@inertiajs/react';
+import {useCallback, useState} from 'react';
 
 interface ConverterProps {
     exchangeRates: ExchangeRate[];
@@ -13,10 +13,10 @@ interface ConverterProps {
 }
 
 export default function ConverterPage({
-    exchangeRates,
-    lastUpdated,
-    pipelines,
-}: ConverterProps) {
+                                          exchangeRates,
+                                          lastUpdated,
+                                          pipelines,
+                                      }: ConverterProps) {
     const auth = usePage().props.auth;
 
     const [amount, setAmount] = useState('');
@@ -24,7 +24,7 @@ export default function ConverterPage({
     const [convertedAmounts, setConvertedAmounts] = useState<
         Record<string, string>
     >({});
-    const [showRatesTable, setShowRatesTable] = useState(true);
+    const [showRatesTable, setShowRatesTable] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const calculateConversions = useCallback(() => {
@@ -67,11 +67,11 @@ export default function ConverterPage({
 
     return (
         <>
-            <Head title="Currency Converter" />
+            <Head title="Currency Converter"/>
 
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <Header lastUpdated={lastUpdated} />
+                    <Header lastUpdated={lastUpdated}/>
 
                     <ConversionForm
                         amount={amount}
@@ -90,8 +90,7 @@ export default function ConverterPage({
                         onToggleRates={() => setShowRatesTable(!showRatesTable)}
                         isLoading={isLoading}
                     />
-
-                    {auth.user && <PipelineTable pipelines={pipelines} />}
+                    {auth.user && <PipelineTable pipelines={pipelines}/>}
                 </div>
             </div>
         </>
