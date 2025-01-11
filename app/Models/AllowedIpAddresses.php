@@ -11,7 +11,7 @@ class AllowedIpAddresses extends Model
         'ip_address',
         'description',
         'is_active',
-        'user_id'
+        'user_id',
     ];
 
     public function user(): BelongsTo

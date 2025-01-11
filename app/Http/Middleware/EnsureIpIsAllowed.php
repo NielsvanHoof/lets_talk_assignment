@@ -21,8 +21,7 @@ class EnsureIpIsAllowed
             $ipAddress = $request->ip();
             $allowedIpAddresses = AllowedIpAddresses::query()->where('is_active', true)->get();
 
-
-            if (!$allowedIpAddresses->contains('ip_address', $ipAddress)) {
+            if (! $allowedIpAddresses->contains('ip_address', $ipAddress)) {
                 abort(403);
             }
         }
