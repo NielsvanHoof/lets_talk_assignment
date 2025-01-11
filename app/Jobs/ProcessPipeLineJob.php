@@ -49,9 +49,14 @@ class ProcessPipeLineJob implements ShouldQueue
             ];
         }
 
-        ExchangeRate::query()->insert($rates);
+        $amountUpdated = ExchangeRate::query()->upsert($rates,
+            ['code', 'alphaCode'],
+            ['rate', 'inverseRate', 'updated_at', 'date']
+        );
 
         Log::info('Exchange rates fetched successfully');
+
+        Log::info('Updated exchange rates', ['count' => $amountUpdated]);
 
         $this->pipeline->update([
             'last_run_at' => now(),
