@@ -15,10 +15,10 @@ class AddIpAddressToDataBaseCommand extends Command
     {
         $ipAddress = $this->ask('Please enter the IP address');
 
-        $this->info('The IP address is: ' . $ipAddress);
+        $this->info('The IP address is: '.$ipAddress);
 
         AllowedIpAddresses::create([
-            'ip_address' => $ipAddress
+            'ip_address' => $ipAddress,
         ]);
 
         $this->info('The IP address has been added to the database');

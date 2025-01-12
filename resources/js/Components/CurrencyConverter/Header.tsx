@@ -29,7 +29,6 @@ export function Header({ lastUpdated }: HeaderProps) {
             );
         } catch (error) {
             console.error('Failed to update rates:', error);
-        } finally {
             setIsUpdating(false);
         }
     };

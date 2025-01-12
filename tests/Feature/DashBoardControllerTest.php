@@ -18,7 +18,6 @@ test('dashboard page is accessible with allowed IP', function () {
         ->withServerVariables(['REMOTE_ADDR' => $allowedIp])
         ->get(route('dashboard'));
 
-
     $response->assertOk();
 });
 
@@ -49,7 +48,6 @@ test('the schedule action creates a pipeline and redirects back', function () {
         'is_active' => true,
         'is_scheduled' => true,
     ];
-
 
     $response = $this->actingAs($user)
         ->withServerVariables(['REMOTE_ADDR' => $allowedIp])
@@ -87,7 +85,6 @@ test('the enable action enables a pipeline and redirects back', function () {
     $response->assertSessionHas('message', 'Schedule enabled successfully');
 });
 
-
 test('the disable action disables a pipeline and redirects back', function () {
     $user = User::factory()->create();
 
@@ -119,7 +116,6 @@ test('the update method runs the FetchExchangeRatesJob synchronously', function 
     Queue::fake();
 
     $user = User::factory()->create();
-
 
     $allowedIp = '127.0.0.1';
     AllowedIpAddresses::factory()->create([

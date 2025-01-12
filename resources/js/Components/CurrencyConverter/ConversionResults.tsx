@@ -1,12 +1,12 @@
-import {ExchangeRate} from '@/types/models';
-import {Button} from '@headlessui/react';
+import { ExchangeRate } from '@/types/models';
+import { Button } from '@headlessui/react';
 import {
     ArrowPathIcon,
     ChevronDownIcon,
     ChevronUpIcon,
 } from '@heroicons/react/24/outline';
-import {AnimatePresence, motion} from 'framer-motion';
-import {WhenVisible} from "@inertiajs/react";
+import { WhenVisible } from '@inertiajs/react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface ConversionResultsProps {
     exchangeRates: ExchangeRate[];
@@ -17,18 +17,18 @@ interface ConversionResultsProps {
 }
 
 export function ConversionResults({
-                                      exchangeRates,
-                                      convertedAmounts,
-                                      showRatesTable,
-                                      onToggleRates,
-                                      isLoading,
-                                  }: ConversionResultsProps) {
+    exchangeRates,
+    convertedAmounts,
+    showRatesTable,
+    onToggleRates,
+    isLoading,
+}: ConversionResultsProps) {
     return (
         <motion.div
-            initial={{opacity: 0, height: 0}}
-            animate={{opacity: 1, height: 'auto'}}
-            exit={{opacity: 0, height: 0}}
-            transition={{duration: 0.3}}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
             className="mb-8"
         >
             <div className="flex items-center justify-between">
@@ -42,12 +42,12 @@ export function ConversionResults({
                     {showRatesTable ? (
                         <>
                             Hide Rates
-                            <ChevronUpIcon className="-mr-1 ml-2 h-4 w-4"/>
+                            <ChevronUpIcon className="-mr-1 ml-2 h-4 w-4" />
                         </>
                     ) : (
                         <>
                             Show Rates
-                            <ChevronDownIcon className="-mr-1 ml-2 h-4 w-4"/>
+                            <ChevronDownIcon className="-mr-1 ml-2 h-4 w-4" />
                         </>
                     )}
                 </Button>
@@ -56,9 +56,9 @@ export function ConversionResults({
             <AnimatePresence>
                 {showRatesTable && (
                     <motion.div
-                        initial={{opacity: 0, height: 0}}
-                        animate={{opacity: 1, height: 'auto'}}
-                        exit={{opacity: 0, height: 0}}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
                         transition={{
                             type: 'spring',
                             damping: 25,
@@ -67,10 +67,9 @@ export function ConversionResults({
                         className="relative mt-4 overflow-hidden rounded-lg border border-gray-200 bg-white shadow"
                     >
                         {isLoading && (
-                            <div
-                                className="absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+                            <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm">
                                 <div className="flex flex-col items-center">
-                                    <ArrowPathIcon className="h-8 w-8 animate-spin text-purple-600"/>
+                                    <ArrowPathIcon className="h-8 w-8 animate-spin text-purple-600" />
                                     <span className="mt-2 text-sm text-gray-500">
                                         Converting...
                                     </span>
@@ -79,65 +78,65 @@ export function ConversionResults({
                         )}
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                    Currency
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                    Converted Amount
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                        Currency
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                        Converted Amount
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
-
-                            {exchangeRates.map((rate, index) => (
-                                <WhenVisible
-                                    buffer={100}
-                                    key={rate.id}
-                                    as="tr"
-                                    fallback={
-                                        <td className="p-4 text-sm text-gray-500">
-                                            Loading exchange rates...
-                                        </td>
-                                    } data={'exchangeRates'}>
-                                    <motion.tr
-                                        initial={{opacity: 0, y: 10}}
-                                        animate={{opacity: 1, y: 0}}
-                                        transition={{delay: index * 0.05}}
-                                        className="transition-colors hover:bg-gray-50"
+                                {exchangeRates.map((rate, index) => (
+                                    <WhenVisible
+                                        buffer={500}
+                                        key={rate.id}
+                                        as="tr"
+                                        fallback={
+                                            <td className="p-4 text-sm text-gray-500">
+                                                Loading exchange rates...
+                                            </td>
+                                        }
+                                        data={'exchangeRates'}
                                     >
-                                        <td className="whitespace-nowrap px-6 py-4">
-                                            <div className="flex items-center">
-                                                <span
-                                                    className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100 text-sm font-semibold text-gray-700">
-                                                    {rate.alphaCode}
-                                                </span>
-                                                <div className="ml-4">
-                                                    <div className="text-sm font-medium text-gray-900">
-                                                        {rate.name}
-                                                    </div>
-                                                    <div className="text-sm text-gray-500">
+                                        <motion.tr
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: index * 0.05 }}
+                                            className="transition-colors hover:bg-gray-50"
+                                        >
+                                            <td className="whitespace-nowrap px-6 py-4">
+                                                <div className="flex items-center">
+                                                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100 text-sm font-semibold text-gray-700">
                                                         {rate.alphaCode}
+                                                    </span>
+                                                    <div className="ml-4">
+                                                        <div className="text-sm font-medium text-gray-900">
+                                                            {rate.name}
+                                                        </div>
+                                                        <div className="text-sm text-gray-500">
+                                                            {rate.alphaCode}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td className="whitespace-nowrap px-6 py-4">
-                                            <div className="text-sm font-medium text-gray-900">
-                                                {rate.alphaCode}{' '}
-                                                {
-                                                    convertedAmounts[
-                                                        rate.alphaCode
+                                            </td>
+                                            <td className="whitespace-nowrap px-6 py-4">
+                                                <div className="text-sm font-medium text-gray-900">
+                                                    {rate.alphaCode}{' '}
+                                                    {
+                                                        convertedAmounts[
+                                                            rate.alphaCode
                                                         ]
-                                                }
-                                            </div>
-                                            <div className="text-xs text-gray-500">
-                                                Rate: {rate.rate.toFixed(4)}
-                                            </div>
-                                        </td>
-                                    </motion.tr>
-                                </WhenVisible>
-                            ))}
+                                                    }
+                                                </div>
+                                                <div className="text-xs text-gray-500">
+                                                    Rate: {rate.rate.toFixed(4)}
+                                                </div>
+                                            </td>
+                                        </motion.tr>
+                                    </WhenVisible>
+                                ))}
                             </tbody>
                         </table>
                     </motion.div>

@@ -42,4 +42,3 @@ test('an IP address can be removed', function () {
         'id' => $ipAddress->id,
     ]);
 });
-

@@ -44,7 +44,6 @@ test('a user can be deleted', function () {
     ]);
 });
 
-
 test('a user cannot delete himself', function () {
     $user = User::factory()->create();
 
