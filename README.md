@@ -8,6 +8,20 @@
 
 Before you begin, ensure you have **Docker** and **Composer** installed on your machine.
 
+When you visit the website, you will be landed on the welcome page, from here you can either login or register for an
+account to access the dashboard.
+When logging in, you will be redirected to the ip-addresses page, where you can view the list of allowed IP addresses
+and add your own IP address to the list.
+you are required to enter your IP address to access the dashboard.
+
+to view your IP address, you can visit the following link: [What is my IP address?](https://www.whatismyip.com/)
+
+or you can run the following command in your terminal:
+
+```bash
+  curl ifconfig.me
+```
+
 ---
 
 ## 🛠️ Setup
@@ -38,7 +52,7 @@ Before you begin, ensure you have **Docker** and **Composer** installed on your 
 Run the following command to start the Docker containers:
 
 ```bash
-./vendor/bin/sail up -d
+  ./vendor/bin/sail up -d
 ```
 
 📦 Installing Dependencies
@@ -47,7 +61,7 @@ Run the following command to start the Docker containers:
    Install Laravel and other dependencies:
 
 ```bash
-./vendor/bin/sail composer install
+  ./vendor/bin/sail composer install
 ```
 
 2. Frontend Dependencies
@@ -55,7 +69,7 @@ Run the following command to start the Docker containers:
 Install and compile front-end assets:
 
 ```bash
-./vendor/bin/sail npm install && ./vendor/bin/sail npm run dev
+  ./vendor/bin/sail npm install && ./vendor/bin/sail npm run dev
 ```
 
 📋 Database Setup
@@ -63,7 +77,7 @@ Install and compile front-end assets:
 Run the necessary migrations to create database tables:
 
 ```bash
-./vendor/bin/sail artisan migrate
+  ./vendor/bin/sail artisan migrate
 ```
 
 🌐 Accessing the Application
@@ -90,21 +104,21 @@ if the above link doesn't work, try opening the link in an incognito window.
     ./vendor/bin/sail artisan queue:work
     ```
 
-3.	Fetch Initial Data
+3. Fetch Initial Data
 
-    To populate the database with data, run:
+To populate the database with data, run:
 
-    ```bash
-    ./vendor/bin/sail artisan schedule:test
-     ```
-   
-4.  Adding your IP to the database
+ ```bash
+  ./vendor/bin/sail artisan schedule:test
+  ```
 
-   To add your IP to the database, run:
+4. Adding your IP to the database
 
-    ```bash
-    ./vendor/bin/sail artisan add:ip-address-to-data-base
-    ```
-    the above command wil prompt you to enter your IP address.
+To add your IP to the database, run:
 
-    Or you can manually access the database and add your IP address to the `allowed_ip_addresses` table.
+ ```bash
+  ./vendor/bin/sail artisan add:ip-address-to-data-base
+ ```
+the above command wil prompt you to enter your IP address.
+
+Or you can manually access the database and add your IP address to the `allowed_ip_addresses` table.
