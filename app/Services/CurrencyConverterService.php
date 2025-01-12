@@ -6,6 +6,7 @@ use App\Models\ExchangeRate;
 use Cache;
 use Illuminate\Database\Eloquent\Collection;
 use InvalidArgumentException;
+use RuntimeException;
 
 class CurrencyConverterService
 {
@@ -42,7 +43,7 @@ class CurrencyConverterService
         } catch (InvalidArgumentException $e) {
             throw $e;
         } catch (\Exception $e) {
-            throw new \RuntimeException('Failed to perform currency conversion: '.$e->getMessage());
+            throw new RuntimeException('Failed to perform currency conversion: '.$e->getMessage());
         }
     }
 
@@ -55,7 +56,7 @@ class CurrencyConverterService
             $rates = ExchangeRate::query()->latest()->get();
 
             if ($rates->isEmpty()) {
-                throw new \RuntimeException('No exchange rates available');
+                throw new RuntimeException('No exchange rates available');
             }
 
             return $rates;
@@ -113,7 +114,7 @@ class CurrencyConverterService
         }
 
         if (empty($conversions)) {
-            throw new \RuntimeException('No valid conversion rates available');
+            throw new RuntimeException('No valid conversion rates available');
         }
 
         return $conversions;
