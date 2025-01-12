@@ -19,17 +19,19 @@ test('dashboard page is accessible with allowed IP', function () {
         ->get(route('dashboard'));
 
 
-    $response->assertStatus(200);
+    $response->assertOk();
 });
 
 test('dashboard page is forbidden with disallowed IP', function () {
     $user = User::factory()->create();
 
+    $forbiddenIp = '192.168.1.1';
+
     $response = $this->actingAs($user)
-        ->withServerVariables(['REMOTE_ADDR' => '192.168.1.1'])
+        ->withServerVariables(['REMOTE_ADDR' => $forbiddenIp])
         ->get(route('dashboard'));
 
-    $response->assertStatus(403);
+    $response->assertForbidden();
 });
 
 test('the schedule action creates a pipeline and redirects back', function () {
@@ -41,15 +43,17 @@ test('the schedule action creates a pipeline and redirects back', function () {
         'is_active' => true,
     ]);
 
+    $data = [
+        'name' => 'Test Pipeline',
+        'cron_expression' => '* * * * *',
+        'is_active' => true,
+        'is_scheduled' => true,
+    ];
+
 
     $response = $this->actingAs($user)
         ->withServerVariables(['REMOTE_ADDR' => $allowedIp])
-        ->post(route('exchange-rates.schedule'), [
-            'name' => 'Test Pipeline',
-            'cron_expression' => '* * * * *',
-            'is_active' => true,
-            'is_scheduled' => true,
-        ]);
+        ->post(route('exchange-rates.schedule'), $data);
 
     $response->assertRedirect();
     $response->assertSessionHas('status', 'success');
