@@ -1,11 +1,38 @@
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: string | undefined;
+}
+
+export interface SharedPageProps {
+    auth: {
+        user: User;
+    };
+    flash: {
+        status: string;
+        message: string | null;
+    };
+}
+
+export interface ConverterPageProps extends SharedPageProps {
+    conversions?: Record<
+        string,
+        {
+            amount: number;
+            rate: number;
+            name: string;
+        }
+    >;
+}
+
 export interface ExchangeRate {
     id: number;
-    code: string;
     alphaCode: string;
     name: string;
     rate: number;
-    date: string;
-    inverseRate: number;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Pipeline {
@@ -25,4 +52,26 @@ export interface IpAddress {
     description: string;
     created_at: string;
     updated_at: string;
+}
+
+export interface ConversionResponse {
+    conversions: Record<
+        string,
+        {
+            amount: number;
+            rate: number;
+            name: string;
+        }
+    >;
+    timestamp: string;
+    base_currency: string;
+    source_amount: number;
+    source_currency: string;
+}
+
+export interface ConversionError {
+    error: string;
+    code: 'VALIDATION_ERROR' | 'SERVICE_ERROR' | 'UNEXPECTED_ERROR';
+    debug?: string;
+    errors?: Record<string, string[]>;
 }

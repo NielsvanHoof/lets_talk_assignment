@@ -1,8 +1,6 @@
-import { Header } from '@/Components/CurrencyConverter/Header';
-import { PipelineTable } from '@/Components/CurrencyConverter/PipelineTable';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { ExchangeRate, Pipeline } from '@/types/models';
-import { Head, usePage } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import ConverterPage from './Converter';
 
 interface DashboardProps {
@@ -16,8 +14,6 @@ export default function Dashboard({
     lastUpdated,
     pipelines,
 }: DashboardProps) {
-    const auth = usePage().props.auth;
-
     return (
         <AuthenticatedLayout
             header={
@@ -30,15 +26,11 @@ export default function Dashboard({
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <Header lastUpdated={lastUpdated} />
-
                     <ConverterPage
                         exchangeRates={exchangeRates}
                         lastUpdated={lastUpdated}
                         pipelines={pipelines}
                     />
-
-                    {auth.user && <PipelineTable pipelines={pipelines} />}
                 </div>
             </div>
         </AuthenticatedLayout>

@@ -7,7 +7,6 @@ import {
     Label,
     Select,
 } from '@headlessui/react';
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
 interface ConversionFormProps {
@@ -18,6 +17,7 @@ interface ConversionFormProps {
     onCurrencyChange: (currency: string) => void;
     onConvert: () => void;
     isLoading: boolean;
+    error: string | null;
 }
 
 export function ConversionForm({
@@ -28,74 +28,121 @@ export function ConversionForm({
     onCurrencyChange,
     onConvert,
     isLoading,
+    error,
 }: ConversionFormProps) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mb-8"
+            transition={{ duration: 0.5 }}
+            className="mb-8 overflow-hidden rounded-lg bg-white p-6 shadow-lg"
         >
-            <div className="overflow-hidden rounded-lg bg-gradient-to-br from-purple-50/80 to-blue-50/80 p-6 shadow-lg backdrop-blur-sm">
-                <Fieldset className="grid gap-4 sm:grid-cols-3">
-                    <Field className="sm:col-span-2">
-                        <Label className="block text-sm font-medium text-gray-700">
-                            Amount
-                        </Label>
-                        <div className="relative mt-1 rounded-md shadow-sm">
-                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <span className="text-gray-500 sm:text-sm">
-                                    {selectedCurrency}
-                                </span>
-                            </div>
-                            <Input
-                                type="number"
-                                name="amount"
-                                id="amount"
-                                value={amount}
-                                onChange={(e) => onAmountChange(e.target.value)}
-                                className="block w-full rounded-md border-gray-300 pl-12 focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
-                                placeholder="0.00"
-                                min="0"
-                                step="0.01"
-                            />
-                        </div>
-                    </Field>
-                    <Field>
-                        <Label className="block text-sm font-medium text-gray-700">
-                            Currency
-                        </Label>
+            <Fieldset className="grid gap-4 sm:grid-cols-2">
+                <Field>
+                    <Label className="block text-sm font-medium text-gray-700">
+                        Amount
+                    </Label>
+                    <div className="mt-1">
+                        <Input
+                            type="number"
+                            name="amount"
+                            id="amount"
+                            value={amount}
+                            onChange={(e) => onAmountChange(e.target.value)}
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            placeholder="Enter amount"
+                            min="0"
+                            step="0.01"
+                        />
+                    </div>
+                </Field>
+
+                <Field>
+                    <Label
+                        htmlFor="currency"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Currency
+                    </Label>
+                    <div className="mt-1">
                         <Select
                             id="currency"
                             name="currency"
                             value={selectedCurrency}
                             onChange={(e) => onCurrencyChange(e.target.value)}
-                            className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         >
                             {exchangeRates.map((rate) => (
-                                <option key={rate.id} value={rate.alphaCode}>
+                                <option
+                                    key={rate.alphaCode}
+                                    value={rate.alphaCode}
+                                >
                                     {rate.alphaCode} - {rate.name}
                                 </option>
                             ))}
                         </Select>
-                    </Field>
-                </Fieldset>
-                <div className="mt-4 flex justify-end">
-                    <Button
-                        onClick={onConvert}
-                        disabled={isLoading}
-                        className="inline-flex items-center rounded-md border border-transparent bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-                    >
-                        {isLoading ? (
-                            <>
-                                <ArrowPathIcon className="-ml-1 mr-3 h-5 w-5 animate-spin text-white" />
-                                Converting...
-                            </>
-                        ) : (
-                            'Convert'
-                        )}
-                    </Button>
+                    </div>
+                </Field>
+            </Fieldset>
+
+            {error && (
+                <div className="mt-4 rounded-md bg-red-50 p-4">
+                    <div className="flex">
+                        <div className="flex-shrink-0">
+                            <svg
+                                className="h-5 w-5 text-red-400"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                        </div>
+                        <div className="ml-3">
+                            <p className="text-sm text-red-700">{error}</p>
+                        </div>
+                    </div>
                 </div>
+            )}
+
+            <div className="mt-4">
+                <Button
+                    type="button"
+                    onClick={onConvert}
+                    disabled={isLoading || !amount}
+                    className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                >
+                    {isLoading ? (
+                        <>
+                            <svg
+                                className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                ></circle>
+                                <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                            </svg>
+                            Converting...
+                        </>
+                    ) : (
+                        'Convert'
+                    )}
+                </Button>
             </div>
         </motion.div>
     );
