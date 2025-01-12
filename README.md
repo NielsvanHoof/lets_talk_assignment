@@ -97,3 +97,14 @@ if the above link doesn't work, try opening the link in an incognito window.
     ```bash
     ./vendor/bin/sail artisan schedule:test
      ```
+   
+4.  Adding your IP to the database
+
+   To add your IP to the database, run:
+
+    ```bash
+    ./vendor/bin/sail artisan add:ip-address-to-data-base
+    ```
+    the above command wil prompt you to enter your IP address.
+
+    Or you can manually access the database and add your IP address to the `allowed_ip_addresses` table.
