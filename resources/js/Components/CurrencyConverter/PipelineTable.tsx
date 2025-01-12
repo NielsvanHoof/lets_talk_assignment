@@ -8,7 +8,7 @@ interface PipelineTableProps {
 
 export function PipelineTable({ pipelines }: PipelineTableProps) {
     const disablePipeline = (pipeline: Pipeline) => {
-        router.delete(
+        router.post(
             route('exchange-rates.disable', { pipeline: pipeline.id }),
             {
                 only: ['pipelines'],

@@ -17,7 +17,7 @@ Route::middleware(['auth', EnsureIpIsAllowed::class])->group(function () {
     Route::post('/exchange-rates/update', [DashBoardController::class, 'update'])->name('exchange-rates.update');
     Route::post('/exchange-rates/schedule', [DashBoardController::class, 'schedule'])->name('exchange-rates.schedule');
     Route::post('/exchange-rates/{pipeline}/enable', [DashBoardController::class, 'enable'])->name('exchange-rates.enable');
-    Route::delete('/exchange-rates/{pipeline}/disable', [DashBoardController::class, 'disable'])->name('exchange-rates.disable');
+    Route::post('/exchange-rates/{pipeline}/disable', [DashBoardController::class, 'disable'])->name('exchange-rates.disable');
 });
 
 Route::middleware('auth')->group(function () {

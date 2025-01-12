@@ -48,7 +48,7 @@ class DashBoardController extends Controller
 
         Pipeline::create([
             ...$data,
-            'user_id' => \Illuminate\Support\Facades\Auth::id(),
+            'user_id' => Auth::id(),
         ]);
 
         return Redirect::back()->with([
