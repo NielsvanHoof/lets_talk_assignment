@@ -70,12 +70,6 @@ export function Header({ lastUpdated }: HeaderProps) {
                                 Schedule Updates
                             </Button>
                             <Link
-                                href={route('dashboard')}
-                                className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-                            >
-                                Dashboard
-                            </Link>
-                            <Link
                                 href={route('logout')}
                                 as="button"
                                 method="post"
