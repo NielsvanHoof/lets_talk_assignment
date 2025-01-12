@@ -17,10 +17,16 @@ export function Header({ lastUpdated }: HeaderProps) {
     const handleUpdateRates = async () => {
         setIsUpdating(true);
         try {
-            router.post(route('exchange-rates.update'), {
-                only: ['exchangeRates'],
-                preserveScroll: true,
-            });
+            router.post(
+                route('exchange-rates.update'),
+                {},
+                {
+                    preserveScroll: true,
+                    onFinish: () => {
+                        setIsUpdating(false);
+                    },
+                },
+            );
         } catch (error) {
             console.error('Failed to update rates:', error);
         } finally {

@@ -92,13 +92,14 @@ export function ConversionResults({
 
                             {exchangeRates.map((rate, index) => (
                                 <WhenVisible
+                                    buffer={100}
                                     key={rate.id}
                                     as="tr"
                                     fallback={
                                         <td className="p-4 text-sm text-gray-500">
                                             Loading exchange rates...
                                         </td>
-                                    } data={'exchangeRates'} buffer={500}>
+                                    } data={'exchangeRates'}>
                                     <motion.tr
                                         initial={{opacity: 0, y: 10}}
                                         animate={{opacity: 1, y: 0}}

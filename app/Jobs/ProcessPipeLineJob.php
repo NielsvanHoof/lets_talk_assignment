@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\ExchangeRate;
 use App\Models\Pipeline;
+use Cache;
 use Http;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -50,7 +51,7 @@ class ProcessPipeLineJob implements ShouldQueue
         }
 
         $amountUpdated = ExchangeRate::query()->upsert($rates,
-            ['code', 'alphaCode'],
+            ['code', 'alphaCode', 'date'],
             ['rate', 'inverseRate', 'updated_at', 'date']
         );
 
@@ -64,5 +65,7 @@ class ProcessPipeLineJob implements ShouldQueue
         ]);
 
         Log::info('Pipeline processed successfully');
+
+        Cache::forget('exchange-rates');
     }
 }

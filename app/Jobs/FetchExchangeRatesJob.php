@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\ExchangeRate;
+use Cache;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Http;
@@ -47,12 +48,14 @@ class FetchExchangeRatesJob implements ShouldQueue
         }
 
         $amountUpdated = ExchangeRate::query()->upsert($rates,
-            ['code', 'alphaCode'],
+            ['code', 'alphaCode', 'date'],
             ['rate', 'inverseRate', 'updated_at', 'date']
         );
 
         Log::info('Exchange rates fetched successfully');
 
         Log::info('Updated exchange rates', ['count' => $amountUpdated]);
+
+        Cache::forget('exchange-rates');
     }
 }

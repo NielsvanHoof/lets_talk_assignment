@@ -7,21 +7,24 @@ interface PipelineTableProps {
 }
 
 export function PipelineTable({ pipelines }: PipelineTableProps) {
-    const disablePipeline = (pipeline: Pipeline) => {
+    const disablePipeline = async (pipeline: Pipeline) => {
         router.post(
             route('exchange-rates.disable', { pipeline: pipeline.id }),
+            {},
             {
-                only: ['pipelines'],
                 preserveScroll: true,
             },
         );
     };
 
-    const enablePipeline = (pipeline: Pipeline) => {
-        router.post(route('exchange-rates.enable', { pipeline: pipeline.id }), {
-            only: ['pipelines'],
-            preserveScroll: true,
-        });
+    const enablePipeline = async (pipeline: Pipeline) => {
+        router.post(
+            route('exchange-rates.enable', { pipeline: pipeline.id }),
+            {},
+            {
+                preserveScroll: true,
+            },
+        );
     };
 
     return (

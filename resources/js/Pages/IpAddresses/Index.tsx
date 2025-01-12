@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { IpAddress } from '@/types/models';
-import { Button } from '@headlessui/react';
+import { Button, Field, Fieldset, Input, Label } from '@headlessui/react';
 import { Head, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -62,58 +62,54 @@ export default function IpAddresses({ ip_addresses }: IpAddressesProps) {
                                     onSubmit={handleSubmit}
                                     className="mb-6 space-y-4 rounded-lg bg-gray-50 p-4"
                                 >
-                                    <div>
-                                        <label
-                                            htmlFor="ip_address"
-                                            className="block text-sm font-medium text-gray-700"
-                                        >
-                                            IP Address
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="ip_address"
-                                            value={data.ip_address}
-                                            onChange={(e) =>
-                                                setData(
-                                                    'ip_address',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
-                                            placeholder="192.168.1.1"
-                                        />
-                                        {errors.ip_address && (
-                                            <p className="mt-1 text-sm text-red-600">
-                                                {errors.ip_address}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <label
-                                            htmlFor="description"
-                                            className="block text-sm font-medium text-gray-700"
-                                        >
-                                            Description
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="description"
-                                            value={data.description}
-                                            onChange={(e) =>
-                                                setData(
-                                                    'description',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
-                                            placeholder="Office IP"
-                                        />
-                                        {errors.description && (
-                                            <p className="mt-1 text-sm text-red-600">
-                                                {errors.description}
-                                            </p>
-                                        )}
-                                    </div>
+                                    <Fieldset>
+                                        <Field>
+                                            <Label className="block text-sm font-medium text-gray-700">
+                                                IP Address
+                                            </Label>
+                                            <Input
+                                                type="text"
+                                                id="ip_address"
+                                                value={data.ip_address}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'ip_address',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                                placeholder="192.168.1.1"
+                                            />
+                                            {errors.ip_address && (
+                                                <p className="mt-1 text-sm text-red-600">
+                                                    {errors.ip_address}
+                                                </p>
+                                            )}
+                                        </Field>
+                                        <Field>
+                                            <Label className="block text-sm font-medium text-gray-700">
+                                                Description
+                                            </Label>
+                                            <Input
+                                                type="text"
+                                                id="description"
+                                                value={data.description}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'description',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                                placeholder="Office IP"
+                                            />
+                                            {errors.description && (
+                                                <p className="mt-1 text-sm text-red-600">
+                                                    {errors.description}
+                                                </p>
+                                            )}
+                                        </Field>
+                                    </Fieldset>
                                     <div className="flex justify-end">
                                         <Button
                                             type="submit"

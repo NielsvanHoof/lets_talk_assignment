@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Button } from '@headlessui/react';
+import { Button, Field, Fieldset, Input, Label } from '@headlessui/react';
 import { Head, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -71,97 +71,98 @@ export default function Users({ users }: UsersProps) {
                                     onSubmit={handleSubmit}
                                     className="mb-6 space-y-4 rounded-lg bg-gray-50 p-4"
                                 >
-                                    <div>
-                                        <label
-                                            htmlFor="name"
-                                            className="block text-sm font-medium text-gray-700"
-                                        >
-                                            Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            value={data.name}
-                                            onChange={(e) =>
-                                                setData('name', e.target.value)
-                                            }
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
-                                            placeholder="John Doe"
-                                        />
-                                        {errors.name && (
-                                            <p className="mt-1 text-sm text-red-600">
-                                                {errors.name}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <label
-                                            htmlFor="email"
-                                            className="block text-sm font-medium text-gray-700"
-                                        >
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            value={data.email}
-                                            onChange={(e) =>
-                                                setData('email', e.target.value)
-                                            }
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
-                                            placeholder="john@example.com"
-                                        />
-                                        {errors.email && (
-                                            <p className="mt-1 text-sm text-red-600">
-                                                {errors.email}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <label
-                                            htmlFor="password"
-                                            className="block text-sm font-medium text-gray-700"
-                                        >
-                                            Password
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="password"
-                                            value={data.password}
-                                            onChange={(e) =>
-                                                setData(
-                                                    'password',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
-                                        />
-                                        {errors.password && (
-                                            <p className="mt-1 text-sm text-red-600">
-                                                {errors.password}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <label
-                                            htmlFor="password_confirmation"
-                                            className="block text-sm font-medium text-gray-700"
-                                        >
-                                            Confirm Password
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="password_confirmation"
-                                            value={data.password_confirmation}
-                                            onChange={(e) =>
-                                                setData(
-                                                    'password_confirmation',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
-                                        />
-                                    </div>
+                                    <Fieldset>
+                                        <Field>
+                                            <Label className="block text-sm font-medium text-gray-700">
+                                                Name
+                                            </Label>
+                                            <Input
+                                                type="text"
+                                                id="name"
+                                                value={data.name}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'name',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                                placeholder="John Doe"
+                                            />
+                                            {errors.name && (
+                                                <p className="mt-1 text-sm text-red-600">
+                                                    {errors.name}
+                                                </p>
+                                            )}
+                                        </Field>
+
+                                        <Field>
+                                            <Label className="block text-sm font-medium text-gray-700">
+                                                Email
+                                            </Label>
+                                            <Input
+                                                type="email"
+                                                id="email"
+                                                value={data.email}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'email',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                                placeholder="john@example.com"
+                                            />
+                                            {errors.email && (
+                                                <p className="mt-1 text-sm text-red-600">
+                                                    {errors.email}
+                                                </p>
+                                            )}
+                                        </Field>
+
+                                        <Field>
+                                            <Label className="block text-sm font-medium text-gray-700">
+                                                Password
+                                            </Label>
+                                            <Input
+                                                type="password"
+                                                id="password"
+                                                value={data.password}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'password',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                            />
+                                            {errors.password && (
+                                                <p className="mt-1 text-sm text-red-600">
+                                                    {errors.password}
+                                                </p>
+                                            )}
+                                        </Field>
+
+                                        <Field>
+                                            <Label className="block text-sm font-medium text-gray-700">
+                                                Confirm Password
+                                            </Label>
+                                            <Input
+                                                type="password"
+                                                id="password_confirmation"
+                                                value={
+                                                    data.password_confirmation
+                                                }
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'password_confirmation',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+                                            />
+                                        </Field>
+                                    </Fieldset>
                                     <div className="flex justify-end">
                                         <Button
                                             type="submit"

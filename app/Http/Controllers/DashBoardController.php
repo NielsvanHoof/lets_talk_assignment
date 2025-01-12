@@ -6,6 +6,7 @@ use App\Jobs\FetchExchangeRatesJob;
 use App\Models\ExchangeRate;
 use App\Models\Pipeline;
 use Auth;
+use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -14,11 +15,11 @@ class DashBoardController extends Controller
 {
     public function index()
     {
-        $exchangeRates = ExchangeRate::query()->get();
+        $exchangeRates = Cache::flexible('exchange-rates', [60, 120], function () {
+            return ExchangeRate::query()->latest()->get();
+        });
 
-        $pipelines = Auth::check()
-            ? Auth::user()->loadExists('pipelines')->pipelines
-            : collect();
+        $pipelines = Auth::user()->loadExists('pipelines')->pipelines;
 
         return Inertia::render('Dashboard', [
             'exchangeRates' => $exchangeRates,
