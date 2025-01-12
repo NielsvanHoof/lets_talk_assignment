@@ -29,3 +29,4 @@ test('dashboard page is forbidden with disallowed IP', function () {
 
     $response->assertStatus(403);
 });
+

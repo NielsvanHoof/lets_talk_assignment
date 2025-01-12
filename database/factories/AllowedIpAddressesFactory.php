@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
-class AllowedIpAdressesFactory extends Factory
+class AllowedIpAddressesFactory extends Factory
 {
     protected $model = AllowedIpAddresses::class;
 
