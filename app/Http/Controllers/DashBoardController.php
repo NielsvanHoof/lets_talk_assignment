@@ -26,7 +26,6 @@ class DashBoardController extends Controller
             'exchangeRates' => $exchangeRates,
             'pipelines' => $pipelines,
             'lastUpdated' => $pipelines->last()->updated_at ?? null,
-            'conversions' => [],
         ]);
     }
 
