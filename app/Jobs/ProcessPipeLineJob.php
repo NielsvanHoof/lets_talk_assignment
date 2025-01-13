@@ -51,7 +51,7 @@ class ProcessPipeLineJob implements ShouldQueue
         }
 
         $amountUpdated = ExchangeRate::query()->upsert($rates,
-            ['code', 'alphaCode', 'date'],
+            ['code', 'alphaCode'],
             ['rate', 'inverseRate', 'updated_at', 'date']
         );
 
